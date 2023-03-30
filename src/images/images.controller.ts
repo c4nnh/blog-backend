@@ -1,5 +1,5 @@
 import { Body, Controller, Post } from '@nestjs/common'
-import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger'
+import { ApiResponse, ApiTags } from '@nestjs/swagger'
 import { IMAGE_FOLDER } from 'src/utils'
 import { UploadImageDto } from './dtos/upload-image.dto'
 import { ImagesService } from './images.service'
@@ -7,7 +7,6 @@ import { CreateSignedUrlResponse } from './responses/create-signed-url.response'
 
 @Controller('images')
 @ApiTags('Image')
-@ApiBearerAuth()
 export class ImagesController {
   constructor(private readonly service: ImagesService) {}
 

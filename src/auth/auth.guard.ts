@@ -8,8 +8,8 @@ import {
 import { Reflector } from '@nestjs/core'
 import { UserRole } from '@prisma/client'
 import { Observable } from 'rxjs'
+import { ROLES_KEY } from '../utils'
 import { AuthService } from './auth.service'
-import { ROLES_KEY } from './roles.decorator'
 
 @Injectable()
 export class AuthGuard implements CanActivate {

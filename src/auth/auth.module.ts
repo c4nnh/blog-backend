@@ -13,6 +13,6 @@ import { JwtConfig } from './jwt.config'
   ],
   providers: [AuthService, AuthGuard],
   controllers: [AuthController],
-  exports: [AuthGuard],
+  exports: [AuthService, AuthGuard],
 })
 export class AuthModule {}

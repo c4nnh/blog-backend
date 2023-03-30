@@ -10,6 +10,9 @@ async function bootstrap() {
   const configService = app.get(ConfigService)
 
   app.enableCors()
+  app.setGlobalPrefix('api', {
+    exclude: ['swagger'],
+  })
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)))
   app.useGlobalPipes(
     new ValidationPipe({
@@ -59,11 +62,10 @@ async function bootstrap() {
     .setTitle('Blog')
     .setDescription('The blog API description')
     .setVersion('1.0')
+    .addBearerAuth()
     .build()
   const document = SwaggerModule.createDocument(app, config)
   SwaggerModule.setup('swagger', app, document)
-
-  app.setGlobalPrefix('api')
 
   const port = configService.get<number>('PORT') || 3000
 

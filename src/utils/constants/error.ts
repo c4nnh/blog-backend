@@ -8,4 +8,8 @@ export const ERROR = {
   IMAGE: {
     CREATE_SIGNED_URL_FAILED: 'create-signed-url-failed',
   },
+  POST: {
+    NOT_FOUND: 'not-found-post',
+    NOT_OWN: 'not-own-post',
+  },
 }
