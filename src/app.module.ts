@@ -5,6 +5,7 @@ import { DatabaseModule } from './database/database.module'
 import { ImagesModule } from './images/images.module'
 import { PostsModule } from './posts/posts.module'
 import { UsersModule } from './users/users.module'
+import { CommentsModule } from './comments/comments.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { UsersModule } from './users/users.module'
     ImagesModule,
     ConfigModule.forRoot({ isGlobal: true, cache: true }),
     PostsModule,
+    CommentsModule,
   ],
 })
 export class AppModule {}
