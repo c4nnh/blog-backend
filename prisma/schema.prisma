@@ -9,3 +9,28 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+enum UserRole {
+  USER
+  ADMIN
+}
+
+enum UserStatus {
+  ACTIVE
+  PENDING
+  INACTIVE
+}
+
+model User {
+  id String @id @default(uuid())
+
+  name      String
+  email     String     @unique
+  password  String
+  role      UserRole   @default(USER)
+  status    UserStatus @default(ACTIVE) // will change to PENDING if has feature confirm email
+  avatarUrl String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
