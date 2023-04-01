@@ -45,7 +45,6 @@ export class PostsService {
     search,
   }: GetPostsQueries): Promise<GetPostsResponse> {
     const where: Prisma.PostWhereInput = {
-      userId,
       OR: [
         {
           title: {
@@ -59,6 +58,10 @@ export class PostsService {
         },
       ],
       isDeleted: false,
+    }
+
+    if (userId) {
+      where.userId = userId
     }
 
     const [items, totalItem] = await Promise.all([
