@@ -1,3 +1,14 @@
+import { ApiProperty, OmitType } from '@nestjs/swagger'
 import { PostEntity } from '../entities/post.entity'
 
-export class PostResponse extends PostEntity {}
+class PostCounter {
+  @ApiProperty()
+  comments: number
+}
+
+export class PostResponse extends OmitType(PostEntity, ['isDeleted']) {
+  @ApiProperty({
+    type: PostCounter,
+  })
+  _count: PostCounter
+}

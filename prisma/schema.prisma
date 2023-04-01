@@ -42,14 +42,15 @@ model User {
 model Post {
   id String @id @default(uuid())
 
-  title    String
-  content  String
-  imageUrl String?
+  title     String
+  content   String
+  imageUrl  String?
+  isDeleted Boolean @default(false)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  user     User      @relation(fields: [userId], references: [id])
+  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId   String
   comments Comment[]
 
@@ -64,11 +65,11 @@ model Comment {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  user     User      @relation(fields: [userId], references: [id])
+  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId   String
-  post     Post      @relation(fields: [postId], references: [id])
+  post     Post      @relation(fields: [postId], references: [id], onDelete: Cascade)
   postId   String
-  parent   Comment?  @relation("CommentReply", fields: [parentId], references: [id])
+  parent   Comment?  @relation("CommentReply", fields: [parentId], references: [id], onDelete: Cascade)
   parentId String?
   children Comment[] @relation("CommentReply")
 

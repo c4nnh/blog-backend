@@ -33,5 +33,5 @@ export class CommentEntity implements Comment {
     type: CommentEntity,
     isArray: true,
   })
-  children: CommentEntity[]
+  children?: CommentEntity[]
 }

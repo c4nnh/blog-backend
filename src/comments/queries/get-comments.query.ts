@@ -1,11 +1,14 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
+import { ApiPropertyOptional, OmitType } from '@nestjs/swagger'
 import { IsOptional, IsString } from 'class-validator'
 import { PaginationQueries } from 'src/utils'
 
-export class GetCommentsQueries extends PaginationQueries {
-  @ApiProperty()
+export class GetCommentsQueries extends OmitType(PaginationQueries, [
+  'search',
+]) {
+  @ApiPropertyOptional()
   @IsString()
-  postId: string
+  @IsOptional()
+  postId?: string
 
   @ApiPropertyOptional()
   @IsString()

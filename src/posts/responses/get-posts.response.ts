@@ -2,10 +2,7 @@ import { ApiProperty } from '@nestjs/swagger'
 import { PaginationResponse } from 'src/utils'
 import { PostResponse } from './post.response'
 
-export class GetPostsResponse implements PaginationResponse<PostResponse> {
-  @ApiProperty()
-  totalItem: number
-
+export class GetPostsResponse extends PaginationResponse<PostResponse> {
   @ApiProperty({
     type: PostResponse,
     isArray: true,

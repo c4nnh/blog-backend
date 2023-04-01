@@ -5,7 +5,12 @@ import {
 } from '@nestjs/common'
 import { Prisma } from '@prisma/client'
 import { PrismaService } from 'src/database/prisma.service'
-import { ERROR } from 'src/utils'
+import {
+  ERROR,
+  commentChildrenCountSelect,
+  postRelationCountSelect,
+  userRelationSelect,
+} from 'src/utils'
 import { CreatePostDto } from './dtos/create-post.dto'
 import { UpdatePostDto } from './dtos/update-post.dto'
 import { GetPostsQueries } from './queries/get-posts.query'
@@ -26,6 +31,9 @@ export class PostsService {
       data: {
         ...dto,
         userId,
+      },
+      include: {
+        _count: postRelationCountSelect,
       },
     })
   }
@@ -50,6 +58,7 @@ export class PostsService {
           },
         },
       ],
+      isDeleted: false,
     }
 
     const [items, totalItem] = await Promise.all([
@@ -57,12 +66,24 @@ export class PostsService {
         where,
         include: {
           user: {
-            select: {
-              id: true,
-              name: true,
-              avatarUrl: true,
+            select: userRelationSelect,
+          },
+          comments: {
+            where: {
+              parentId: null,
+            },
+            take: 3,
+            orderBy: {
+              createdAt: 'desc',
+            },
+            include: {
+              user: {
+                select: userRelationSelect,
+              },
+              _count: commentChildrenCountSelect,
             },
           },
+          _count: postRelationCountSelect,
         },
         skip,
         take,
@@ -73,22 +94,23 @@ export class PostsService {
     ])
 
     return {
-      totalItem,
+      pagination: {
+        totalItem,
+        take,
+        skip,
+      },
       items,
     }
   }
 
   async getById(postId: string): Promise<PostResponse> {
-    const post = await this.prisma.post.findUnique({
-      where: { id: postId },
+    const post = await this.prisma.post.findFirst({
+      where: { id: postId, isDeleted: false },
       include: {
         user: {
-          select: {
-            id: true,
-            name: true,
-            avatarUrl: true,
-          },
+          select: userRelationSelect,
         },
+        _count: postRelationCountSelect,
       },
     })
 
@@ -109,14 +131,20 @@ export class PostsService {
     return this.prisma.post.update({
       data: dto,
       where: { id: postId },
+      include: {
+        _count: postRelationCountSelect,
+      },
     })
   }
 
   async delete(userId: string, postId: string): Promise<boolean> {
     await this.checkPermission(userId, postId)
 
-    await this.prisma.post.delete({
+    await this.prisma.post.update({
       where: { id: postId },
+      data: {
+        isDeleted: false,
+      },
     })
 
     return true

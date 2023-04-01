@@ -12,4 +12,10 @@ export const ERROR = {
     NOT_FOUND: 'not-found-post',
     NOT_OWN: 'not-own-post',
   },
+  COMMENT: {
+    NOT_FOUND_PARENT: 'not-found-parent-comment',
+    NOT_FOUND: 'not-found-comment',
+    NOT_OWN: 'not-own-comment',
+    MISSING_POST_OR_PARENT: 'missing-post-or-parent',
+  },
 }

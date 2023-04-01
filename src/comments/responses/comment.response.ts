@@ -1,3 +1,14 @@
+import { ApiProperty } from '@nestjs/swagger'
 import { CommentEntity } from '../entities/comment.entity'
 
-export class CommentResponse extends CommentEntity {}
+class CommentCounter {
+  @ApiProperty()
+  children: number
+}
+
+export class CommentResponse extends CommentEntity {
+  @ApiProperty({
+    type: CommentCounter,
+  })
+  _count: CommentCounter
+}
