@@ -75,3 +75,16 @@ model Comment {
 
   @@map("comment")
 }
+
+model React {
+  id String @id @default(uuid())
+
+  name      String  @unique
+  emoji     String  @unique
+  isDeleted Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("react")
+}

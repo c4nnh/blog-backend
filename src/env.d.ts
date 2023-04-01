@@ -3,6 +3,8 @@ declare global {
     interface ProcessEnv {
       NODE_ENV: 'develop' | 'production'
       PORT: number
+      ADMIN_EMAIL: string
+      ADMIN_PASSWORD: string
       DATABASE_URL: string
       JWT_SECRET: string
       JWT_ACCESS_EXPIRED: string

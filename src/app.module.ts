@@ -6,6 +6,7 @@ import { ImagesModule } from './images/images.module'
 import { PostsModule } from './posts/posts.module'
 import { UsersModule } from './users/users.module'
 import { CommentsModule } from './comments/comments.module';
+import { ReactsModule } from './reacts/reacts.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { CommentsModule } from './comments/comments.module';
     ConfigModule.forRoot({ isGlobal: true, cache: true }),
     PostsModule,
     CommentsModule,
+    ReactsModule,
   ],
 })
 export class AppModule {}
