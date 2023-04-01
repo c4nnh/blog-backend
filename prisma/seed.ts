@@ -1,4 +1,4 @@
-import { Prisma, PrismaClient } from '@prisma/client'
+import { EmojiFor, Prisma, PrismaClient } from '@prisma/client'
 import { createHash } from 'crypto'
 const prisma = new PrismaClient()
 
@@ -6,18 +6,23 @@ const defaultEmojies: Prisma.EmojiCreateInput[] = [
   {
     name: 'Like',
     icon: '👍',
+    for: [EmojiFor.POST, EmojiFor.COMMENT],
+    isDefault: true,
   },
   {
     name: 'Dislike',
     icon: '👎',
+    for: [EmojiFor.POST, EmojiFor.COMMENT],
   },
   {
     name: 'Wow',
     icon: '😮',
+    for: [EmojiFor.POST],
   },
   {
     name: 'Looking',
     icon: '🧐',
+    for: [EmojiFor.POST],
   },
 ]
 

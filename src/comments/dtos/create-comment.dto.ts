@@ -1,8 +1,9 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
-import { IsOptional, IsString } from 'class-validator'
+import { IsOptional, IsString, IsUUID } from 'class-validator'
+import { CommentEntity } from '../entities/comment.entity'
 
-export class CreateCommentDto {
-  @IsString()
+export class CreateCommentDto implements Pick<CommentEntity, 'content'> {
+  @IsUUID(4)
   @ApiProperty()
   postId: string
 
@@ -10,7 +11,7 @@ export class CreateCommentDto {
   @ApiProperty()
   content: string
 
-  @IsString()
+  @IsUUID(4)
   @IsOptional()
   @ApiPropertyOptional()
   parentId?: string

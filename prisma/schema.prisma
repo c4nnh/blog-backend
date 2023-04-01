@@ -31,10 +31,12 @@ model User {
   status    UserStatus @default(ACTIVE) // will change to PENDING if has feature confirm email
   avatarUrl String?
 
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  posts     Post[]
-  comments  Comment[]
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  posts           Post[]
+  comments        Comment[]
+  reactsToPost    ReactToPost[]
+  reactsToComment ReactToComment[]
 
   @@map("user")
 }
@@ -50,9 +52,10 @@ model Post {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId   String
-  comments Comment[]
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId       String
+  comments     Comment[]
+  reactsToPost ReactToPost[]
 
   @@map("post")
 }
@@ -65,26 +68,70 @@ model Comment {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId   String
-  post     Post      @relation(fields: [postId], references: [id], onDelete: Cascade)
-  postId   String
-  parent   Comment?  @relation("CommentReply", fields: [parentId], references: [id], onDelete: Cascade)
-  parentId String?
-  children Comment[] @relation("CommentReply")
+  user            User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId          String
+  post            Post             @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId          String
+  parent          Comment?         @relation("CommentReply", fields: [parentId], references: [id], onDelete: Cascade)
+  parentId        String?
+  children        Comment[]        @relation("CommentReply")
+  reactsToComment ReactToComment[]
 
   @@map("comment")
+}
+
+enum EmojiFor {
+  POST
+  COMMENT
 }
 
 model Emoji {
   id String @id @default(uuid())
 
-  name      String  @unique
-  icon      String  @unique
-  isDeleted Boolean @default(false)
+  name      String     @unique
+  icon      String     @unique
+  isDeleted Boolean    @default(false)
+  for       EmojiFor[]
+  isDefault Boolean    @default(false)
+
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  reactsToPost    ReactToPost[]
+  reactsToComment ReactToComment[]
+
+  @@map("emoji")
+}
+
+model ReactToPost {
+  id String @id @default(uuid())
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@map("emoji")
+  user    User   @relation(fields: [userId], references: [id])
+  userId  String
+  emoji   Emoji  @relation(fields: [emojiId], references: [id])
+  emojiId String
+  post    Post   @relation(fields: [postId], references: [id])
+  postId  String
+
+  @@unique([userId, postId])
+  @@map("react_to_post")
+}
+
+model ReactToComment {
+  id String @id @default(uuid())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user      User    @relation(fields: [userId], references: [id])
+  userId    String
+  emoji     Emoji   @relation(fields: [emojiId], references: [id])
+  emojiId   String
+  comment   Comment @relation(fields: [commentId], references: [id])
+  commentId String
+
+  @@unique([userId, commentId])
+  @@map("react_to_comment")
 }
