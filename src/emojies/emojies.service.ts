@@ -7,6 +7,6 @@ export class EmojiesService {
   constructor(private readonly prisma: PrismaService) {}
 
   getAll(): Promise<EmojiResponse[]> {
-    return this.prisma.emoji.findMany()
+    return this.prisma.emoji.findMany({ where: { isDeleted: false } })
   }
 }
