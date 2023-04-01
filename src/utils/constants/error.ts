@@ -18,4 +18,7 @@ export const ERROR = {
     NOT_OWN: 'not-own-comment',
     MISSING_POST_OR_PARENT: 'missing-post-or-parent',
   },
+  USER: {
+    NOT_FOUND: 'not-found-user',
+  },
 }
