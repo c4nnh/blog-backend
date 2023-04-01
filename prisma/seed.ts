@@ -2,22 +2,22 @@ import { Prisma, PrismaClient } from '@prisma/client'
 import { createHash } from 'crypto'
 const prisma = new PrismaClient()
 
-const defaultReacts: Prisma.ReactCreateInput[] = [
+const defaultEmojies: Prisma.EmojiCreateInput[] = [
   {
     name: 'Like',
-    emoji: '👍',
+    icon: '👍',
   },
   {
     name: 'Dislike',
-    emoji: '👎',
+    icon: '👎',
   },
   {
     name: 'Wow',
-    emoji: '😮',
+    icon: '😮',
   },
   {
     name: 'Looking',
-    emoji: '🧐',
+    icon: '🧐',
   },
 ]
 
@@ -39,8 +39,8 @@ async function main() {
       update: adminAccount,
       create: adminAccount,
     }),
-    ...defaultReacts.map(dto => {
-      return prisma.react.upsert({
+    ...defaultEmojies.map(dto => {
+      return prisma.emoji.upsert({
         where: { name: dto.name },
         update: dto,
         create: dto,

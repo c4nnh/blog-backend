@@ -76,15 +76,15 @@ model Comment {
   @@map("comment")
 }
 
-model React {
+model Emoji {
   id String @id @default(uuid())
 
   name      String  @unique
-  emoji     String  @unique
+  icon      String  @unique
   isDeleted Boolean @default(false)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@map("react")
+  @@map("emoji")
 }
