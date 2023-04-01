@@ -88,6 +88,9 @@ export class PostsService {
           },
           _count: postRelationCountSelect,
         },
+        orderBy: {
+          updatedAt: 'desc',
+        },
         skip,
         take,
       }),
