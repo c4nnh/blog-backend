@@ -1,7 +1,8 @@
 import { Controller, Get, Query, UseGuards } from '@nestjs/common'
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger'
+import { User } from '@prisma/client'
 import { AuthGuard } from 'src/auth/auth.guard'
-import { PaginationQueries } from 'src/utils'
+import { CurrentUser, PaginationQueries } from 'src/utils'
 import { PostsService } from './posts.service'
 import { GetPostsResponse } from './responses/get-posts.response'
 
@@ -16,7 +17,7 @@ export class NewsFeedController {
   @ApiResponse({
     type: GetPostsResponse,
   })
-  newsFeed(@Query() queries: PaginationQueries) {
-    return this.service.getMany(queries)
+  newsFeed(@Query() queries: PaginationQueries, @CurrentUser() user: User) {
+    return this.service.getMany(user.id, queries)
   }
 }

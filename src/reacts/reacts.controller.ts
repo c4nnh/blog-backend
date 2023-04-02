@@ -1,8 +1,21 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common'
-import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger'
+import {
+  Body,
+  Controller,
+  Delete,
+  Param,
+  Post,
+  UseGuards,
+} from '@nestjs/common'
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiParam,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger'
 import { User } from '@prisma/client'
 import { AuthGuard } from 'src/auth/auth.guard'
-import { CurrentUser } from 'src/utils'
+import { CurrentUser, GetByIdParams } from 'src/utils'
 import { CreateReactToCommentDto } from './dtos/create-react-to-comment.dto'
 import { CreateReactToPostDto } from './dtos/create-react-to-post.dto'
 import { ReactsService } from './reacts.service'
@@ -27,6 +40,18 @@ export class ReactsController {
     return this.service.reactToPost(user.id, dto)
   }
 
+  @Delete('to-post/:id')
+  @ApiParam({
+    name: 'id',
+    type: GetByIdParams,
+  })
+  @ApiResponse({
+    type: Boolean,
+  })
+  unreactToPost(@CurrentUser() user: User, @Param('id') id: string) {
+    return this.service.unreactToPost(user.id, id)
+  }
+
   @Post('to-comment')
   @ApiBody({
     type: CreateReactToCommentDto,
@@ -39,5 +64,17 @@ export class ReactsController {
     @Body() dto: CreateReactToCommentDto
   ) {
     return this.service.reactToComment(user.id, dto)
+  }
+
+  @Delete('to-comment/:id')
+  @ApiParam({
+    name: 'id',
+    type: GetByIdParams,
+  })
+  @ApiResponse({
+    type: Boolean,
+  })
+  unreactToComment(@CurrentUser() user: User, @Param('id') id: string) {
+    return this.service.unreactToComment(user.id, id)
   }
 }

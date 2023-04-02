@@ -1,6 +1,6 @@
-import { Injectable } from '@nestjs/common'
+import { ForbiddenException, Injectable } from '@nestjs/common'
 import { PrismaService } from 'src/database/prisma.service'
-import { userRelationSelect } from 'src/utils'
+import { ERROR, userRelationSelect } from 'src/utils'
 import { CreateReactToCommentDto } from './dtos/create-react-to-comment.dto'
 import { CreateReactToPostDto } from './dtos/create-react-to-post.dto'
 import { ReactToCommentResponse } from './response/react-to-comment.response'
@@ -51,6 +51,26 @@ export class ReactsService {
     })
   }
 
+  async unreactToPost(userId: string, reactId: string): Promise<boolean> {
+    const react = await this.prisma.reactToPost.findUnique({
+      where: { id: reactId },
+    })
+
+    if (!react) return true
+
+    if (react.userId !== userId) {
+      throw new ForbiddenException(ERROR.REACT.NOT_OWN)
+    }
+
+    await this.prisma.reactToPost.delete({
+      where: {
+        id: reactId,
+      },
+    })
+
+    return true
+  }
+
   async reactToComment(
     userId: string,
     dto: CreateReactToCommentDto
@@ -90,5 +110,25 @@ export class ReactsService {
       where: { id: reactToComment.id },
       include,
     })
+  }
+
+  async unreactToComment(userId: string, reactId: string): Promise<boolean> {
+    const react = await this.prisma.reactToComment.findUnique({
+      where: { id: reactId },
+    })
+
+    if (!react) return true
+
+    if (react.userId !== userId) {
+      throw new ForbiddenException(ERROR.REACT.NOT_OWN)
+    }
+
+    await this.prisma.reactToComment.delete({
+      where: {
+        id: reactId,
+      },
+    })
+
+    return true
   }
 }

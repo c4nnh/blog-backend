@@ -21,4 +21,7 @@ export const ERROR = {
   USER: {
     NOT_FOUND: 'not-found-user',
   },
+  REACT: {
+    NOT_OWN: 'not-own-react',
+  },
 }

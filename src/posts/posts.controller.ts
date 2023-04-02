@@ -49,7 +49,7 @@ export class PostsController {
     type: GetPostsResponse,
   })
   getMany(@Query() queries: GetPostsQueries, @CurrentUser() user: User) {
-    return this.service.getMany({
+    return this.service.getMany(user.id, {
       ...queries,
       userId: queries.userId ?? user.id,
     })

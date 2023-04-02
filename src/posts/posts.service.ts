@@ -38,12 +38,10 @@ export class PostsService {
     })
   }
 
-  async getMany({
-    userId,
-    take,
-    skip,
-    search,
-  }: GetPostsQueries): Promise<GetPostsResponse> {
+  async getMany(
+    currentUserId: string,
+    { userId, take, skip, search }: GetPostsQueries
+  ): Promise<GetPostsResponse> {
     const where: Prisma.PostWhereInput = {
       OR: [
         {
@@ -86,6 +84,16 @@ export class PostsService {
               _count: commentChildrenCountSelect,
             },
           },
+          reacts: {
+            where: {
+              userId: currentUserId,
+            },
+            select: {
+              id: true,
+              emojiId: true,
+              userId: true,
+            },
+          },
           _count: postRelationCountSelect,
         },
         orderBy: {
@@ -105,7 +113,15 @@ export class PostsService {
         take,
         skip,
       },
-      items,
+      items: items.map(item => {
+        const { reacts, ...post } = item
+        const yourReact = reacts.find(item => item.userId === currentUserId)
+
+        return {
+          ...post,
+          yourReact,
+        }
+      }),
     }
   }
 
