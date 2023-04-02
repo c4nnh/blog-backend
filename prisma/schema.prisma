@@ -52,10 +52,10 @@ model Post {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId       String
-  comments     Comment[]
-  reactsToPost ReactToPost[]
+  user     User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId   String
+  comments Comment[]
+  reacts   ReactToPost[]
 
   @@map("post")
 }
@@ -68,14 +68,14 @@ model Comment {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  user            User             @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId          String
-  post            Post             @relation(fields: [postId], references: [id], onDelete: Cascade)
-  postId          String
-  parent          Comment?         @relation("CommentReply", fields: [parentId], references: [id], onDelete: Cascade)
-  parentId        String?
-  children        Comment[]        @relation("CommentReply")
-  reactsToComment ReactToComment[]
+  user     User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId   String
+  post     Post             @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId   String
+  parent   Comment?         @relation("CommentReply", fields: [parentId], references: [id], onDelete: Cascade)
+  parentId String?
+  children Comment[]        @relation("CommentReply")
+  reacts   ReactToComment[]
 
   @@map("comment")
 }
