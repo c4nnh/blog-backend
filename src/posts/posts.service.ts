@@ -34,6 +34,9 @@ export class PostsService {
       },
       include: {
         _count: postRelationCountSelect,
+        user: {
+          select: userRelationSelect,
+        },
       },
     })
   }
