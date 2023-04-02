@@ -1,11 +1,10 @@
-import { Optional } from '@nestjs/common'
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
 import { Transform } from 'class-transformer'
-import { IsEmail, IsString } from 'class-validator'
+import { IsEmail, IsOptional, IsString } from 'class-validator'
 import { UserEntity } from '../../users/entities/user.entity'
 
 export class RegisterDto
-  implements Pick<UserEntity, 'email' | 'name' | 'password' | 'avatarUrl'>
+  implements Pick<UserEntity, 'email' | 'name' | 'password'>
 {
   @IsEmail()
   @ApiProperty()
@@ -23,7 +22,7 @@ export class RegisterDto
 
   @IsString()
   @Transform(({ value }) => value.trim())
-  @Optional()
+  @IsOptional()
   @ApiPropertyOptional()
-  avatarUrl: string
+  avatarUrl?: string
 }
