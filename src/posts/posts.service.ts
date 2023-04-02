@@ -52,6 +52,8 @@ export class PostsService {
             contains: search,
             mode: 'insensitive',
           },
+        },
+        {
           content: {
             contains: search,
             mode: 'insensitive',
