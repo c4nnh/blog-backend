@@ -17,7 +17,12 @@ jobs:
     executor: node/default
     steps:
       - checkout
-      - node/install-packages
+      - run:
+          name: Install pnpm
+          command: npm install -g pnpm
+      - run:
+          name: Install dependencies
+          command: pnpm install
 
   publish-to-dockerhub:
     executor: docker-publisher
