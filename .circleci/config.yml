@@ -1,62 +1,48 @@
-# This config was automatically generated from your source code
-# Stacks detected: deps:node:.,test:jest:
 version: 2.1
+
 orbs:
-  node: circleci/node@5
-jobs:
-  test-node:
-    # Install node dependencies and run tests
-    executor: node/default
-    environment:
-      JEST_JUNIT_OUTPUT_DIR: ./test-results/
-    steps:
-      - checkout
-      - node/install-packages:
-          cache-path: ~/project/node_modules
-          override-ci-command: npm install
-      - run:
-          command: npm install jest-junit
-      - run:
-          name: Run tests
-          command: npm run test --ci --runInBand --reporters=default --reporters=jest-junit
-      - store_test_results:
-          path: ./test-results/
-  build-node:
-    # Build node project
-    executor: node/default
-    steps:
-      - checkout
-      - node/install-packages:
-          cache-path: ~/project/node_modules
-          override-ci-command: npm install
-      - run:
-          command: npm run build
-      - run:
-          name: Create the ~/artifacts directory if it doesn't exist
-          command: mkdir -p ~/artifacts
-      # Copy output to artifacts dir
-      - run:
-          name: Copy artifacts
-          command: cp -R build dist public .output .next .docusaurus ~/artifacts 2>/dev/null || true
-      - store_artifacts:
-          path: ~/artifacts
-          destination: node-build
-  deploy:
-    # This is an example deploy job, not actually used by the workflow
+  node: circleci/node@4.7.0
+  docker: circleci/docker@2.2.0
+
+executors:
+  docker-publisher:
     docker:
       - image: cimg/base:stable
-    steps:
-      # Replace this with steps to deploy to users
-      - run:
-          name: deploy
-          command: '#e.g. ./deploy.sh'
-workflows:
+        auth:
+          username: $DOCKERHUB_USERNAME
+          password: $DOCKERHUB_PASSWORD
+
+jobs:
   build-and-test:
+    executor: node/default
+    steps:
+      - checkout
+      - node/install-packages
+      - run:
+          name: Run Tests
+          command: npm test
+
+  publish-to-dockerhub:
+    executor: docker-publisher
+    environment:
+      IMAGE_NAME: yourdockerhubusername/yourimagename:latest
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Build Docker Image
+          command: docker build -t $IMAGE_NAME .
+      - run:
+          name: Push Docker Image to Docker Hub
+          command: |
+            echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+            docker push $IMAGE_NAME
+
+workflows:
+  version: 2
+  build-and-deploy:
     jobs:
-      - test-node
-      - build-node:
+      - build-and-test
+      - publish-to-dockerhub:
           requires:
-            - test-node
-    # - deploy:
-    #     requires:
-    #       - build-node
+            - build-and-test
