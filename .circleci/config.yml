@@ -13,6 +13,11 @@ executors:
           password: $DOCKERHUB_PASSWORD
 
 jobs:
+  build-and-test:
+    executor: node/default
+    steps:
+      - checkout
+      - node/install-packages
 
   publish-to-dockerhub:
     executor: docker-publisher
