@@ -24,7 +24,7 @@ jobs:
   publish-to-dockerhub:
     executor: docker-publisher
     environment:
-      IMAGE_NAME: yourdockerhubusername/yourimagename:latest
+      IMAGE_NAME: cannh/test-circleci:latest
     steps:
       - checkout
       - setup_remote_docker
